@@ -3,7 +3,7 @@
 import struct
 import time
 
-from PySide import QtCore
+from PyQt4 import QtCore
 
 import serial
 from serial.tools import list_ports
@@ -33,7 +33,7 @@ class ThorStepper(QtCore.QThread):
     MSG_GET_POS = b'\x04\x12'
     MSG_GET_STEP_SIZE = b'\x04\x47'
 
-    event = QtCore.Signal(object)
+    event = QtCore.pyqtSignal(object)
 
     def __init__(self, parent=None, port=None):
         super().__init__(parent)
