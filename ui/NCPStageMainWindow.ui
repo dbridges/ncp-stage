@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1011</width>
+    <height>528</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Neural Circuit Probe Stage Controller</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout_2"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionHome">
+   <property name="text">
+    <string>Home</string>
+   </property>
+  </action>
+  <action name="actionGoToPos">
+   <property name="text">
+    <string>Go to...</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+ <slots>
+  <slot>on_actionHome_triggered()</slot>
+  <slot>on_actionGoToPos_triggered()</slot>
+ </slots>
+</ui>
