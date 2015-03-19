@@ -23,6 +23,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         # Hardware initialization
         try:
             self.stage = stepper.XYStage(self)
+            self.stage.velocity = self.jogSpeedSlider.value() / 10
         except IOError as e:
             message = QtGui.QMessageBox(self)
             message.setWindowTitle('Connection Error')
@@ -33,7 +34,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         # Application initializations
         self._timer = QtCore.QTimer(self)
         self._timer.timeout.connect(self.tick)
-        self._timer.start(100)
+        self._timer.start(150)
 
     def tick(self):
         self.stage.update()
@@ -59,6 +60,14 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
     @QtCore.pyqtSlot()
     def on_jogRightButton_released(self):
         self.stage.x_motor.stop_move()
+
+    @QtCore.pyqtSlot()
+    def on_jogDownButton_clicked(self):
+        self.stage.x_motor.pos = 2
+
+    @QtCore.pyqtSlot(int)
+    def on_jogSpeedSlider_sliderMoved(self, val):
+        self.stage.velocity = val / 10
 
     @QtCore.pyqtSlot()
     def on_homeButton_clicked(self):

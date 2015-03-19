@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/NCPStageMainWindow.ui'
 #
-# Created: Wed Mar 18 16:53:56 2015
+# Created: Thu Mar 19 09:01:17 2015
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -132,7 +132,9 @@ class Ui_MainWindow(object):
         self.jogSpeedLabel.setObjectName(_fromUtf8("jogSpeedLabel"))
         self.formLayout.setWidget(2, QtGui.QFormLayout.LabelRole, self.jogSpeedLabel)
         self.jogSpeedSlider = QtGui.QSlider(self.centralwidget)
-        self.jogSpeedSlider.setMinimum(1)
+        self.jogSpeedSlider.setMinimum(5)
+        self.jogSpeedSlider.setMaximum(200)
+        self.jogSpeedSlider.setSliderPosition(100)
         self.jogSpeedSlider.setOrientation(QtCore.Qt.Horizontal)
         self.jogSpeedSlider.setObjectName(_fromUtf8("jogSpeedSlider"))
         self.formLayout.setWidget(2, QtGui.QFormLayout.FieldRole, self.jogSpeedSlider)

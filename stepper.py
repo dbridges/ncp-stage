@@ -36,6 +36,7 @@ class XYStage:
         x_port = None
         y_port = None
         self._y = 0
+        self._velocity = 0
 
         for p in list_ports.comports():
             if self.X_MOTOR_SN in p[2]:
@@ -64,17 +65,25 @@ class XYStage:
         """
         self.x_motor.pos = limit(val, 0, 10)
 
+    @property
+    def velocity(self):
+        return self._velocity
+
+    @velocity.setter
+    def velocity(self, val):
+        self.x_motor.velocity = val
+
     def home(self):
         self.x_motor.home()
 
     def on_xMotor_event(self, event):
         event_type, data = event
-        if event_type == 'pos' or event_type == 'move_completed':
-            self.parent.on_xPos_changed(data)
+        #if event_type == 'pos' or event_type == 'move_completed':
+            #self.parent.on_xPos_changed(data)
+        self.parent.on_xPos_changed(self.x_motor.pos)
 
     def update(self):
-        pass
-        #self.x_motor.update()
+        self.x_motor.update()
 
     def stop(self):
         try:
@@ -91,6 +100,7 @@ class ThorStepper(QtCore.QThread):
 
     MSG_HOMED = b'\x04\x44'
     MSG_MOVE_COMPLETED = b'\x04\x64'
+    MSG_MOVE_STOP = b'\x04\x66'
     MSG_GET_POS = b'\x04\x12'
     MSG_GET_STEP_SIZE = b'\x04\x47'
 
@@ -102,6 +112,7 @@ class ThorStepper(QtCore.QThread):
         self.homed = False
         self._pos = 0
         self._step_size = 0
+        self._velocity = 0
 
         if port is None:
             # Try to find right port.
@@ -117,10 +128,10 @@ class ThorStepper(QtCore.QThread):
             self.serial = serial.Serial(port,
                                         baudrate=115200,
                                         timeout=1)
+            self.connected = True
             self.serial.flushInput()
             self.serial.flushOutput()
             self.set_initial_values()
-            self.connected = True
         except:
             self.connected = False
 
@@ -134,6 +145,7 @@ class ThorStepper(QtCore.QThread):
         self.serial.write(b'\x45\x04\x06\x00\x91\x01\x01\x00' +
                           struct.pack('<i', counts))
         self._step_size = step
+        self.velocity = 30
 
     def run(self):
         self._running = True
@@ -163,6 +175,12 @@ class ThorStepper(QtCore.QThread):
                 response = self.serial.read(6)
                 data = struct.unpack('<i',
                                      response[-4:])[0] / self.counts_per_mm
+                self._pos = data
+            elif msg == self.MSG_MOVE_STOP:
+                event_type = 'stop'
+                response = self.serial.read(14)
+                data = struct.unpack('<i',
+                                     response[2:6])[0] / self.counts_per_mm
                 self._pos = data
             elif msg == self.MSG_GET_STEP_SIZE:
                 event_type = 'step_size'
@@ -211,6 +229,12 @@ class ThorStepper(QtCore.QThread):
         else:
             self.serial.write(b'\x57\x04\x01\x02\x11\x01')
 
+    def start_status(self):
+        self.serial.write(b'\x11\x00\x01\x00\x11\x01')
+
+    def stop_status(self):
+        self.serial.write(b'\x12\x00\x00\x00\x11\x01')
+
     def update(self):
         if not self.connected:
             return
@@ -257,6 +281,22 @@ class ThorStepper(QtCore.QThread):
                        -self.counts_per_mm, self.counts_per_mm)
         self.serial.write(b'\x45\x04\x06\x00\x91\x01\x01\x00' +
                           struct.pack('<i', counts))
+
+    @property
+    def velocity(self):
+        return self._v
+
+    @velocity.setter
+    def velocity(self, val):
+        """
+        val : float
+            Velocity in mm/s
+        """
+        if not self.connected:
+            return None
+        v = struct.pack('<L', int(val * self.counts_per_mm))
+        self.serial.write(b'\x13\x04\x0E\x00\x91\x01\x01\x00' +
+                          struct.pack('<L', 0) + struct.pack('<L', 180000) + v)
 
     def stop(self, wait=False):
         self._running = False
