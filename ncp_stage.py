@@ -47,23 +47,35 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 
     @QtCore.pyqtSlot()
     def on_jogLeftButton_pressed(self):
-        self.stage.x_motor.start_move('backward')
+        self.stage.start_move('x', 'backward')
 
     @QtCore.pyqtSlot()
     def on_jogLeftButton_released(self):
-        self.stage.x_motor.stop_move()
+        self.stage.stop_move('x')
 
     @QtCore.pyqtSlot()
     def on_jogRightButton_pressed(self):
-        self.stage.x_motor.start_move('forward')
+        self.stage.start_move('x', 'forward')
 
     @QtCore.pyqtSlot()
     def on_jogRightButton_released(self):
-        self.stage.x_motor.stop_move()
+        self.stage.stop_move('x')
 
     @QtCore.pyqtSlot()
-    def on_jogDownButton_clicked(self):
-        self.stage.x_motor.pos = 2
+    def on_jogDownButton_pressed(self):
+        self.stage.start_move('y', 'forward')
+
+    @QtCore.pyqtSlot()
+    def on_jogDownButton_released(self):
+        self.stage.stop_move('y')
+
+    @QtCore.pyqtSlot()
+    def on_jogUpButton_pressed(self):
+        self.stage.start_move('y', 'backward')
+
+    @QtCore.pyqtSlot()
+    def on_jogUpButton_released(self):
+        self.stage.stop_move('y')
 
     @QtCore.pyqtSlot(int)
     def on_jogSpeedSlider_sliderMoved(self, val):

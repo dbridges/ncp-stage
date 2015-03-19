@@ -45,13 +45,18 @@ class XYStage:
                 y_port = p[0]
         if x_port is None:
             raise IOError('X motor not connected.')
-        #if y_port is None:
-            #raise IOError('Y motor not connected.')
+        if y_port is None:
+            raise IOError('Y motor not connected.')
 
         self.x_motor = ThorStepper(port=x_port)
         self.x_motor.event.connect(self.on_xMotor_event,
                                    QtCore.Qt.QueuedConnection)
         self.x_motor.start()
+
+        self.y_motor = ThorStepper(port=y_port)
+        self.y_motor.event.connect(self.on_yMotor_event,
+                                   QtCore.Qt.QueuedConnection)
+        self.y_motor.start()
 
     @property
     def x(self):
@@ -66,24 +71,53 @@ class XYStage:
         self.x_motor.pos = limit(val, 0, 10)
 
     @property
+    def y(self):
+        return self.y_motor.pos
+
+    @y.setter
+    def y(self, val):
+        """
+        val : float
+            position in mm
+        """
+        self.y_motor.pos = limit(val, 0, 10)
+
+    @property
     def velocity(self):
         return self._velocity
 
     @velocity.setter
     def velocity(self, val):
         self.x_motor.velocity = val
+        self.y_motor.velocity = val
 
     def home(self):
         self.x_motor.home()
+        self.y_motor.home()
 
     def on_xMotor_event(self, event):
         event_type, data = event
-        #if event_type == 'pos' or event_type == 'move_completed':
-            #self.parent.on_xPos_changed(data)
         self.parent.on_xPos_changed(self.x_motor.pos)
+
+    def on_yMotor_event(self, event):
+        event_type, data = event
+        self.parent.on_yPos_changed(self.y_motor.pos)
+
+    def start_move(self, axis, direction):
+        if axis == 'x':
+            self.x_motor.start_move(direction)
+        elif axis == 'y':
+            self.y_motor.start_move(direction)
+
+    def stop_move(self, axis):
+        if axis == 'x':
+            self.x_motor.stop_move()
+        if axis == 'y':
+            self.y_motor.stop_move()
 
     def update(self):
         self.x_motor.update()
+        self.y_motor.update()
 
     def stop(self):
         try:
@@ -133,6 +167,7 @@ class ThorStepper(QtCore.QThread):
             self.serial.flushOutput()
             self.set_initial_values()
         except:
+            raise
             self.connected = False
 
         self._running = False
