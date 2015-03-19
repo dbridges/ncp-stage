@@ -23,6 +23,67 @@ def limit(val, minimum, maximum):
         return val
 
 
+class XYStage:
+    """
+    Implements interface to two Thor motors creating an x-y stage.
+    """
+
+    X_MOTOR_SN = '83823572'
+    Y_MOTOR_SN = '83823570'
+
+    def __init__(self, parent=None):
+        self.parent = parent
+        x_port = None
+        y_port = None
+        self._y = 0
+
+        for p in list_ports.comports():
+            if self.X_MOTOR_SN in p[2]:
+                x_port = p[0]
+            elif self.Y_MOTOR_SN in p[2]:
+                y_port = p[0]
+        if x_port is None:
+            raise IOError('X motor not connected.')
+        #if y_port is None:
+            #raise IOError('Y motor not connected.')
+
+        self.x_motor = ThorStepper(port=x_port)
+        self.x_motor.event.connect(self.on_xMotor_event,
+                                   QtCore.Qt.QueuedConnection)
+        self.x_motor.start()
+
+    @property
+    def x(self):
+        return self.x_motor.pos
+
+    @x.setter
+    def x(self, val):
+        """
+        val : float
+            position in mm
+        """
+        self.x_motor.pos = limit(val, 0, 10)
+
+    def home(self):
+        self.x_motor.home()
+
+    def on_xMotor_event(self, event):
+        event_type, data = event
+        if event_type == 'pos' or event_type == 'move_completed':
+            self.parent.on_xPos_changed(data)
+
+    def update(self):
+        pass
+        #self.x_motor.update()
+
+    def stop(self):
+        try:
+            self.x_motor.stop()
+            self.y_motor.stop()
+        except:
+            pass
+
+
 class ThorStepper(QtCore.QThread):
     """
     Implements interface to Thor APT TDC001 stepper motor.
@@ -128,6 +189,27 @@ class ThorStepper(QtCore.QThread):
         if not self.connected:
             return
         self.serial.write(b'\x48\x04\x01\x00\x11\x01')
+
+    def jog(self, direction):
+        if not self.connected:
+            return
+        if direction == 'backward':
+            self.serial.write(b'\x6a\x04\x01\x01\x11\x01')
+        else:
+            self.serial.write(b'\x6a\x04\x01\x02\x11\x01')
+
+    def stop_move(self):
+        if not self.connected:
+            return
+        self.serial.write(b'\x65\x04\x01\x02\x11\x01')
+
+    def start_move(self, direction):
+        if not self.connected:
+            return
+        if direction == 'backward':
+            self.serial.write(b'\x57\x04\x01\x01\x11\x01')
+        else:
+            self.serial.write(b'\x57\x04\x01\x02\x11\x01')
 
     def update(self):
         if not self.connected:

@@ -125,6 +125,20 @@
           </property>
          </widget>
         </item>
+        <item>
+         <widget class="QPushButton" name="goToZeroButton">
+          <property name="text">
+           <string>Go to zero</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="homeButton">
+          <property name="text">
+           <string>Home</string>
+          </property>
+         </widget>
+        </item>
        </layout>
       </item>
       <item>
@@ -196,6 +210,23 @@
           </property>
           <property name="maximum">
            <double>100000000.000000000000000</double>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="jogSpeedLabel">
+          <property name="text">
+           <string>Jog Speed</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QSlider" name="jogSpeedSlider">
+          <property name="minimum">
+           <number>1</number>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
           </property>
          </widget>
         </item>

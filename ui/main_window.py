@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/NCPStageMainWindow.ui'
 #
-# Created: Wed Mar 18 12:26:12 2015
+# Created: Wed Mar 18 16:53:56 2015
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -93,6 +93,12 @@ class Ui_MainWindow(object):
         self.pushButton_2 = QtGui.QPushButton(self.centralwidget)
         self.pushButton_2.setObjectName(_fromUtf8("pushButton_2"))
         self.horizontalLayout_3.addWidget(self.pushButton_2)
+        self.goToZeroButton = QtGui.QPushButton(self.centralwidget)
+        self.goToZeroButton.setObjectName(_fromUtf8("goToZeroButton"))
+        self.horizontalLayout_3.addWidget(self.goToZeroButton)
+        self.homeButton = QtGui.QPushButton(self.centralwidget)
+        self.homeButton.setObjectName(_fromUtf8("homeButton"))
+        self.horizontalLayout_3.addWidget(self.homeButton)
         self.verticalLayout.addLayout(self.horizontalLayout_3)
         self.formLayout = QtGui.QFormLayout()
         self.formLayout.setContentsMargins(-1, 10, -1, -1)
@@ -122,6 +128,14 @@ class Ui_MainWindow(object):
         self.yPosSpinBox.setMaximum(100000000.0)
         self.yPosSpinBox.setObjectName(_fromUtf8("yPosSpinBox"))
         self.formLayout.setWidget(1, QtGui.QFormLayout.FieldRole, self.yPosSpinBox)
+        self.jogSpeedLabel = QtGui.QLabel(self.centralwidget)
+        self.jogSpeedLabel.setObjectName(_fromUtf8("jogSpeedLabel"))
+        self.formLayout.setWidget(2, QtGui.QFormLayout.LabelRole, self.jogSpeedLabel)
+        self.jogSpeedSlider = QtGui.QSlider(self.centralwidget)
+        self.jogSpeedSlider.setMinimum(1)
+        self.jogSpeedSlider.setOrientation(QtCore.Qt.Horizontal)
+        self.jogSpeedSlider.setObjectName(_fromUtf8("jogSpeedSlider"))
+        self.formLayout.setWidget(2, QtGui.QFormLayout.FieldRole, self.jogSpeedSlider)
         self.verticalLayout.addLayout(self.formLayout)
         spacerItem2 = QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
         self.verticalLayout.addItem(spacerItem2)
@@ -142,10 +156,13 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(_translate("MainWindow", "Neural Circuit Probe Stage Controller", None))
         self.pushButton_2.setText(_translate("MainWindow", "Zero", None))
+        self.goToZeroButton.setText(_translate("MainWindow", "Go to zero", None))
+        self.homeButton.setText(_translate("MainWindow", "Home", None))
         self.xLabel.setText(_translate("MainWindow", "X", None))
         self.yLabel.setText(_translate("MainWindow", "Y", None))
         self.xPosSpinBox.setSuffix(_translate("MainWindow", " um", None))
         self.yPosSpinBox.setSuffix(_translate("MainWindow", " um", None))
+        self.jogSpeedLabel.setText(_translate("MainWindow", "Jog Speed", None))
         self.actionHome.setText(_translate("MainWindow", "Home", None))
         self.actionGoToPos.setText(_translate("MainWindow", "Go to...", None))
 

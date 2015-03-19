@@ -1,19 +1,11 @@
 #!/usr/bin/env python3
 
+import sys
+
 from PyQt4 import QtGui, QtCore  # noqa
 from ui.main_window import Ui_MainWindow
 
 import stepper
-
-
-# Try to load local port definitions
-try:
-    import stepper_ports
-    x_motor_port = stepper_ports.x_motor_port
-    y_motor_port = stepper_ports.y_motor_port
-except ImportError:
-    x_motor_port = None
-    y_motor_port = None
 
 
 class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
@@ -29,21 +21,48 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.load_settings()
 
         # Hardware initialization
-        self.x_motor = stepper.ThorStepper(port='/dev/ttyUSB1')
-        self.x_motor.event.connect(self.on_xMotor_event,
-                                   QtCore.Qt.QueuedConnection)
-        self.x_motor.start()
+        try:
+            self.stage = stepper.XYStage(self)
+        except IOError as e:
+            message = QtGui.QMessageBox(self)
+            message.setWindowTitle('Connection Error')
+            message.setText(str(e))
+            message.exec_()
+            sys.exit()
+
+        # Application initializations
         self._timer = QtCore.QTimer(self)
         self._timer.timeout.connect(self.tick)
         self._timer.start(100)
 
     def tick(self):
-        self.x_motor.update()
+        self.stage.update()
 
-    def on_xMotor_event(self, event):
-        event_type, data = event
-        if event_type == 'pos':
-            self.xPosSpinBox.setValue(data * 1000)
+    def on_xPos_changed(self, val):
+        self.xPosSpinBox.setValue(val * 1000)
+
+    def on_yPos_changed(self, val):
+        self.yPosSpinBox.setValue(val * 1000)
+
+    @QtCore.pyqtSlot()
+    def on_jogLeftButton_pressed(self):
+        self.stage.x_motor.start_move('backward')
+
+    @QtCore.pyqtSlot()
+    def on_jogLeftButton_released(self):
+        self.stage.x_motor.stop_move()
+
+    @QtCore.pyqtSlot()
+    def on_jogRightButton_pressed(self):
+        self.stage.x_motor.start_move('forward')
+
+    @QtCore.pyqtSlot()
+    def on_jogRightButton_released(self):
+        self.stage.x_motor.stop_move()
+
+    @QtCore.pyqtSlot()
+    def on_homeButton_clicked(self):
+        self.stage.home()
 
     def load_settings(self):
         # Load gui settings and restore window geometery
@@ -66,6 +85,6 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         Called when window is trying to be closed.  Call event.accept() to
         allow the window to be closed.
         """
-        self.x_motor.stop()
+        self.stage.stop()
         self.save_settings()
         event.accept()
