@@ -37,7 +37,6 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         self._timer.start(150)
 
     def tick(self):
-        return
         self.stage.update()
 
     def on_xPos_changed(self, val):
@@ -45,6 +44,10 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 
     def on_yPos_changed(self, val):
         self.yPosSpinBox.setValue(val * 1000)
+
+    @QtCore.pyqtSlot()
+    def on_zeroButton_pressed(self):
+        self.stage.zero()
 
     @QtCore.pyqtSlot()
     def on_jogLeftButton_pressed(self):
@@ -84,11 +87,21 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 
     @QtCore.pyqtSlot()
     def on_homeButton_clicked(self):
-        self.stage.home()
+        self.stage.home(center=True)
 
     @QtCore.pyqtSlot(object)
     def on_meaNavigationWidget_clicked(self, coord):
-        print(coord)
+        # When stage is zeroed, should be centered on A4
+        self.stage.x = -coord[0] / 1000
+        self.stage.y = -(coord[1] - 300) / 1000
+
+    @QtCore.pyqtSlot()
+    def on_retractYButton_clicked(self):
+        self.stage.retract_y()
+
+    @QtCore.pyqtSlot()
+    def on_returnYButton_clicked(self):
+        self.stage.return_y()
 
     def load_settings(self):
         # Load gui settings and restore window geometery

@@ -66,5 +66,5 @@ class MEANavigationWidget(QtGui.QWidget):
             spacing = min(w, h) / 13
             x = 5.5 - ((self.width() / 2 - event.x()) / spacing)
             y = 5.5 - ((self.height() / 2 - event.y()) / spacing)
-            self.clicked.emit((x, y))
+            self.clicked.emit((100*x, 100*y))
             event.accept()

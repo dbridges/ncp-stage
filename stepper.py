@@ -35,8 +35,10 @@ class XYStage:
         self.parent = parent
         x_port = None
         y_port = None
-        self._y = 0
+        self._zx = 0  # absolute pos of zeroed x
+        self._zy = 0
         self._velocity = 0
+        self._old_y = 0
 
         for p in list_ports.comports():
             if self.X_MOTOR_SN in p[2]:
@@ -60,27 +62,31 @@ class XYStage:
 
     @property
     def x(self):
-        return self.x_motor.pos
+        return self.x_motor.pos - self._zx
 
     @x.setter
     def x(self, val):
         """
+        Sets x coordinate of stage relative to zeroed position.
+
         val : float
             position in mm
         """
-        self.x_motor.pos = limit(val, 0, 10)
+        self.x_motor.pos = limit(val + self._zx, 0, 10)
 
     @property
     def y(self):
-        return self.y_motor.pos
+        return self.y_motor.pos - self._zy
 
     @y.setter
     def y(self, val):
         """
+        Sets y coordinate of stage relative to zeroed position.
+
         val : float
             position in mm
         """
-        self.y_motor.pos = limit(val, 0, 10)
+        self.y_motor.pos = limit(val + self._zy, 0, 10)
 
     @property
     def velocity(self):
@@ -91,17 +97,20 @@ class XYStage:
         self.x_motor.velocity = val
         self.y_motor.velocity = val
 
-    def home(self):
+    def home(self, center=False):
         self.x_motor.home()
         self.y_motor.home()
+        if center:
+            self.x_motor.pos = 6
+            self.y_motor.pos = 6
 
     def on_xMotor_event(self, event):
         event_type, data = event
-        self.parent.on_xPos_changed(self.x_motor.pos)
+        self.parent.on_xPos_changed(self.x)
 
     def on_yMotor_event(self, event):
         event_type, data = event
-        self.parent.on_yPos_changed(self.y_motor.pos)
+        self.parent.on_yPos_changed(self.y)
 
     def start_move(self, axis, direction):
         if axis == 'x':
@@ -118,6 +127,18 @@ class XYStage:
     def update(self):
         self.x_motor.update()
         self.y_motor.update()
+
+    def zero(self):
+        self._zx = self.x_motor.pos
+        self._zy = self.y_motor.pos
+
+    def retract_y(self):
+        self._old_y = self.y_motor.pos
+        self.y_motor.pos = 12
+
+    def return_y(self):
+        if self._old_y is not None:
+            self.y_motor.pos = self._old_y
 
     def stop(self):
         try:

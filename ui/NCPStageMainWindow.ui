@@ -141,22 +141,56 @@
        </layout>
       </item>
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_3">
-        <item>
-         <widget class="QPushButton" name="pushButton_2">
+       <layout class="QFormLayout" name="formLayout_3">
+        <item row="0" column="0">
+         <widget class="QLabel" name="okLabel">
+          <property name="text">
+           <string>Jog Speed</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QSlider" name="jogSpeedSlider">
+          <property name="minimum">
+           <number>5</number>
+          </property>
+          <property name="maximum">
+           <number>200</number>
+          </property>
+          <property name="sliderPosition">
+           <number>100</number>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QGridLayout" name="gridLayout_2">
+        <item row="4" column="1">
+         <widget class="QPushButton" name="retractYButton">
+          <property name="text">
+           <string>Retract</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QPushButton" name="zeroButton">
           <property name="text">
            <string>Zero</string>
           </property>
          </widget>
         </item>
-        <item>
-         <widget class="QPushButton" name="goToZeroButton">
+        <item row="1" column="1">
+         <widget class="QPushButton" name="returnYButton">
           <property name="text">
-           <string>Go to zero</string>
+           <string>Return</string>
           </property>
          </widget>
         </item>
-        <item>
+        <item row="3" column="2">
          <widget class="QPushButton" name="homeButton">
           <property name="text">
            <string>Home</string>
@@ -166,7 +200,13 @@
        </layout>
       </item>
       <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_3"/>
+      </item>
+      <item>
        <layout class="QFormLayout" name="formLayout">
+        <property name="fieldGrowthPolicy">
+         <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+        </property>
         <property name="topMargin">
          <number>10</number>
         </property>
@@ -174,13 +214,6 @@
          <widget class="QLabel" name="xLabel">
           <property name="text">
            <string>X</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="yLabel">
-          <property name="text">
-           <string>Y</string>
           </property>
          </widget>
         </item>
@@ -212,6 +245,13 @@
           </property>
          </widget>
         </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="yLabel">
+          <property name="text">
+           <string>Y</string>
+          </property>
+         </widget>
+        </item>
         <item row="1" column="1">
          <widget class="QDoubleSpinBox" name="yPosSpinBox">
           <property name="enabled">
@@ -234,29 +274,6 @@
           </property>
           <property name="maximum">
            <double>100000000.000000000000000</double>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="jogSpeedLabel">
-          <property name="text">
-           <string>Jog Speed</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1">
-         <widget class="QSlider" name="jogSpeedSlider">
-          <property name="minimum">
-           <number>5</number>
-          </property>
-          <property name="maximum">
-           <number>200</number>
-          </property>
-          <property name="sliderPosition">
-           <number>100</number>
-          </property>
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
           </property>
          </widget>
         </item>
