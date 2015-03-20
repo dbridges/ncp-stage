@@ -51,7 +51,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 
     @QtCore.pyqtSlot()
     def on_jogLeftButton_pressed(self):
-        self.stage.start_move('x', 'backward')
+        self.stage.start_move('x', 'forward')
 
     @QtCore.pyqtSlot()
     def on_jogLeftButton_released(self):
@@ -59,7 +59,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 
     @QtCore.pyqtSlot()
     def on_jogRightButton_pressed(self):
-        self.stage.start_move('x', 'forward')
+        self.stage.start_move('x', 'backward')
 
     @QtCore.pyqtSlot()
     def on_jogRightButton_released(self):
@@ -67,7 +67,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 
     @QtCore.pyqtSlot()
     def on_jogDownButton_pressed(self):
-        self.stage.start_move('y', 'forward')
+        self.stage.start_move('y', 'backward')
 
     @QtCore.pyqtSlot()
     def on_jogDownButton_released(self):
@@ -75,7 +75,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 
     @QtCore.pyqtSlot()
     def on_jogUpButton_pressed(self):
-        self.stage.start_move('y', 'backward')
+        self.stage.start_move('y', 'forward')
 
     @QtCore.pyqtSlot()
     def on_jogUpButton_released(self):
