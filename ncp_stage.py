@@ -37,6 +37,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         self._timer.start(150)
 
     def tick(self):
+        return
         self.stage.update()
 
     def on_xPos_changed(self, val):
