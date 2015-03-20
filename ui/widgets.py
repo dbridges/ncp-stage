@@ -5,6 +5,7 @@ class MEANavigationWidget(QtGui.QWidget):
     """
     A widget which displays an MEA overview grid.
     """
+    clicked = QtCore.pyqtSignal(object)
 
     mea_120_electrodes = ['f7', 'f8', 'f12', 'f11', 'f10', 'f9', 'e12', 'e11',
                           'e10', 'e9', 'd12', 'd11', 'd10', 'd9', 'c11', 'c10',
@@ -57,3 +58,13 @@ class MEANavigationWidget(QtGui.QWidget):
             p.setPen(QtGui.QColor(217, 38, 0))
             p.drawText(QtCore.QRectF(x-30, y-55, 60, 40),
                        QtCore.Qt.AlignCenter, tag.upper())
+
+    def mouseReleaseEvent(self, event):
+        if event.button() == QtCore.Qt.LeftButton:
+            w = self.width()
+            h = self.height()
+            spacing = min(w, h) / 13
+            x = 5.5 - ((self.width() / 2 - event.x()) / spacing)
+            y = 5.5 - ((self.height() / 2 - event.y()) / spacing)
+            self.clicked.emit((x, y))
+            event.accept()

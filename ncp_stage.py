@@ -86,6 +86,10 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
     def on_homeButton_clicked(self):
         self.stage.home()
 
+    @QtCore.pyqtSlot(object)
+    def on_meaNavigationWidget_clicked(self, coord):
+        print(coord)
+
     def load_settings(self):
         # Load gui settings and restore window geometery
         settings = QtCore.QSettings('UCSB', 'ncpstepper')
