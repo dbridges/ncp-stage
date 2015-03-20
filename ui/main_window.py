@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/NCPStageMainWindow.ui'
 #
-# Created: Thu Mar 19 09:01:17 2015
+# Created: Thu Mar 19 17:09:18 2015
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -32,7 +32,7 @@ class Ui_MainWindow(object):
         self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
         self.horizontalLayout = QtGui.QHBoxLayout(self.centralwidget)
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
-        self.meaNavigationWidget = QtGui.QWidget(self.centralwidget)
+        self.meaNavigationWidget = MEANavigationWidget(self.centralwidget)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -54,6 +54,7 @@ class Ui_MainWindow(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.jogRightButton.sizePolicy().hasHeightForWidth())
         self.jogRightButton.setSizePolicy(sizePolicy)
+        self.jogRightButton.setMaximumSize(QtCore.QSize(50, 16777215))
         self.jogRightButton.setText(_fromUtf8(""))
         self.jogRightButton.setObjectName(_fromUtf8("jogRightButton"))
         self.gridLayout.addWidget(self.jogRightButton, 1, 2, 1, 1)
@@ -63,6 +64,7 @@ class Ui_MainWindow(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.jogLeftButton.sizePolicy().hasHeightForWidth())
         self.jogLeftButton.setSizePolicy(sizePolicy)
+        self.jogLeftButton.setMaximumSize(QtCore.QSize(50, 16777215))
         self.jogLeftButton.setText(_fromUtf8(""))
         self.jogLeftButton.setObjectName(_fromUtf8("jogLeftButton"))
         self.gridLayout.addWidget(self.jogLeftButton, 1, 0, 1, 1)
@@ -72,6 +74,7 @@ class Ui_MainWindow(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.jogDownButton.sizePolicy().hasHeightForWidth())
         self.jogDownButton.setSizePolicy(sizePolicy)
+        self.jogDownButton.setMaximumSize(QtCore.QSize(50, 16777215))
         self.jogDownButton.setText(_fromUtf8(""))
         self.jogDownButton.setObjectName(_fromUtf8("jogDownButton"))
         self.gridLayout.addWidget(self.jogDownButton, 2, 1, 1, 1)
@@ -81,6 +84,7 @@ class Ui_MainWindow(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.jogUpButton.sizePolicy().hasHeightForWidth())
         self.jogUpButton.setSizePolicy(sizePolicy)
+        self.jogUpButton.setMaximumSize(QtCore.QSize(50, 16777215))
         self.jogUpButton.setText(_fromUtf8(""))
         self.jogUpButton.setObjectName(_fromUtf8("jogUpButton"))
         self.gridLayout.addWidget(self.jogUpButton, 0, 1, 1, 1)
@@ -168,3 +172,4 @@ class Ui_MainWindow(object):
         self.actionHome.setText(_translate("MainWindow", "Home", None))
         self.actionGoToPos.setText(_translate("MainWindow", "Go to...", None))
 
+from ui.widgets import MEANavigationWidget
