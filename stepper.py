@@ -26,13 +26,25 @@ def limit(val, minimum, maximum):
 class XYStage:
     """
     Implements interface to two Thor motors creating an x-y stage.
+
+    Parameters
+    ----------
+
+    parent : QWidget
+        Widget to handle callbacks. Should implement on_xPos_changed(event) and
+        on_yPos_changed(event)
+
+    x_motor_sn : str
+        Serial number identifier to use to find correct x motor com port.
+
+    y_motor_sn : str
+        Serial number identifier to use to find correct y motor com port.
     """
 
-    X_MOTOR_SN = '83823572'
-    Y_MOTOR_SN = '83823570'
-
-    def __init__(self, parent=None):
+    def __init__(self, parent, x_motor_sn, y_motor_sn):
         self.parent = parent
+        print(x_motor_sn)
+        print(y_motor_sn)
         x_port = None
         y_port = None
         self._zx = 0  # absolute pos of zeroed x
@@ -41,9 +53,9 @@ class XYStage:
         self._old_y = 0
 
         for p in list_ports.comports():
-            if self.X_MOTOR_SN in p[2]:
+            if x_motor_sn in p[2]:
                 x_port = p[0]
-            elif self.Y_MOTOR_SN in p[2]:
+            elif y_motor_sn in p[2]:
                 y_port = p[0]
         if x_port is None:
             raise IOError('X motor not connected.')

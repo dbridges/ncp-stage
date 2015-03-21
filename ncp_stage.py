@@ -15,6 +15,8 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
     def __init__(self, parent_app, parent=None):
         super(MainWindow, self).__init__(parent)
         self.app = parent_app
+        self.x_motor_sn = None
+        self.y_motor_sn = None
 
         # UI initialization
         self.setupUi(self)
@@ -22,7 +24,8 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 
         # Hardware initialization
         try:
-            self.stage = stepper.XYStage(self)
+            self.stage = stepper.XYStage(
+                self, self.x_motor_sn, self.y_motor_sn)
             self.stage.velocity = self.jogSpeedSlider.value() / 10
         except IOError as e:
             message = QtGui.QMessageBox(self)
@@ -107,6 +110,10 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         # Load gui settings and restore window geometery
         settings = QtCore.QSettings('UCSB', 'ncpstepper')
         try:
+            settings.beginGroup('Stepper')
+            self.x_motor_sn = settings.value('x_motor_sn')
+            self.y_motor_sn = settings.value('y_motor_sn')
+            settings.endGroup()
             settings.beginGroup('MainWindow')
             self.restoreGeometry(settings.value('geometry'))
             settings.endGroup()
