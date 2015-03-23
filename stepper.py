@@ -110,6 +110,8 @@ class XYStage:
         self.y_motor.velocity = val
 
     def home(self, center=False):
+        self._zx = 0
+        self._zy = 0
         self.x_motor.home()
         self.y_motor.home()
         if center:
