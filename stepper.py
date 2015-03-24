@@ -117,14 +117,17 @@ class XYStage:
         if center:
             self.x_motor.pos = self.parent.saved_zero_pos[0]
             self.y_motor.pos = self.parent.saved_zero_pos[1]
-        self.zero()
 
     def on_xMotor_event(self, event):
         event_type, data = event
+        if event_type == 'homed':
+            self.zero()
         self.parent.on_xPos_changed(self.x)
 
     def on_yMotor_event(self, event):
         event_type, data = event
+        if event_type == 'homed':
+            self.zero()
         self.parent.on_yPos_changed(self.y)
 
     def start_move(self, axis, direction):
