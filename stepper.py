@@ -115,8 +115,8 @@ class XYStage:
         self.x_motor.home()
         self.y_motor.home()
         if center:
-            self.x_motor.pos = 6
-            self.y_motor.pos = 6
+            self.x_motor.pos = self.parent.saved_zero_pos[0]
+            self.y_motor.pos = self.parent.saved_zero_pos[1]
 
     def on_xMotor_event(self, event):
         event_type, data = event
@@ -143,8 +143,16 @@ class XYStage:
         self.y_motor.update()
 
     def zero(self):
+        """
+        Zero stage relative to current absolute position.
+
+        Returns
+        -------
+        The absolute position offset.
+        """
         self._zx = self.x_motor.pos
         self._zy = self.y_motor.pos
+        return (self._zx, self._zy)
 
     def retract_y(self):
         self._old_y = self.y_motor.pos

@@ -17,6 +17,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.app = parent_app
         self.x_motor_sn = None
         self.y_motor_sn = None
+        self.saved_zero_pos = (4, 4)
 
         # UI initialization
         self.setupUi(self)
@@ -50,7 +51,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
 
     @QtCore.pyqtSlot()
     def on_zeroButton_pressed(self):
-        self.stage.zero()
+        self.saved_zero_pos = self.stage.zero()
 
     @QtCore.pyqtSlot()
     def on_jogLeftButton_pressed(self):
@@ -113,6 +114,8 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
             settings.beginGroup('Stepper')
             self.x_motor_sn = settings.value('x_motor_sn')
             self.y_motor_sn = settings.value('y_motor_sn')
+            self.saved_zero_pos = (settings.value('x_pos', 4),
+                                   settings.value('y_pos', 4))
             settings.endGroup()
             settings.beginGroup('MainWindow')
             self.restoreGeometry(settings.value('geometry'))
@@ -124,6 +127,10 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
         settings = QtCore.QSettings('UCSB', 'ncpstepper')
         settings.beginGroup('MainWindow')
         settings.setValue('geometry', self.saveGeometry())
+        settings.endGroup()
+        settings.beginGroup('Stepper')
+        settings.setValue('x_pos', self.saved_zero_pos[0])
+        settings.setValue('y_pos', self.saved_zero_pos[1])
         settings.endGroup()
 
     def closeEvent(self, event):
