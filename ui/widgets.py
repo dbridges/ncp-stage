@@ -27,6 +27,7 @@ class MEANavigationWidget(QtGui.QWidget):
         self.mea_120_columns = {'a':  0, 'b': 1, 'c': 2, 'd': 3, 'e': 4,
                                 'f': 5, 'g': 6, 'h': 7, 'j': 8, 'k': 9,
                                 'l': 10, 'm': 11}
+        self.current_pos = (0, 0)
 
     def paintEvent(self, event):
         d = min(self.width(), self.height())
@@ -47,6 +48,7 @@ class MEANavigationWidget(QtGui.QWidget):
         p.setBrush(QtGui.QColor(167, 231, 255, 98))
         p.drawRoundedRect(0, 0, 1300, 1300, 65, 65)
 
+        # Draw electrodes
         p.setBrush(QtGui.QColor(0, 98, 136))
         for tag in self.mea_120_electrodes:
             p.setPen(QtCore.Qt.NoPen)
@@ -59,6 +61,17 @@ class MEANavigationWidget(QtGui.QWidget):
             p.drawText(QtCore.QRectF(x-30, y-55, 60, 40),
                        QtCore.Qt.AlignCenter, tag.upper())
 
+        # Draw current position.
+        x, y = self.current_pos
+        offset = 5
+        length = 25
+        p.setPen(QtGui.QColor(0, 172, 11))
+        p.setBrush(QtCore.Qt.NoBrush)
+        p.drawLine(x - offset, y, x - offset - length, y)
+        p.drawLine(x + offset, y, x + offset + length, y)
+        p.drawLine(x, y - offset, x, y - offset - length)
+        p.drawLine(x, y + offset, x, y + offset + length)
+
     def mouseReleaseEvent(self, event):
         if event.button() == QtCore.Qt.LeftButton:
             w = self.width()
@@ -66,5 +79,6 @@ class MEANavigationWidget(QtGui.QWidget):
             spacing = min(w, h) / 13
             x = 5.5 - ((self.width() / 2 - event.x()) / spacing)
             y = 5.5 - ((self.height() / 2 - event.y()) / spacing)
-            self.clicked.emit((100*x, 100*y))
+            self.current_pos = (100*x, 100*y)
+            self.clicked.emit(self.current_pos)
             event.accept()
