@@ -114,8 +114,8 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow):
             settings.beginGroup('Stepper')
             self.x_motor_sn = settings.value('x_motor_sn')
             self.y_motor_sn = settings.value('y_motor_sn')
-            self.saved_zero_pos = (settings.value('x_pos', 4),
-                                   settings.value('y_pos', 4))
+            self.saved_zero_pos = (float(settings.value('x_pos', 4)),
+                                   float(settings.value('y_pos', 4)))
             settings.endGroup()
             settings.beginGroup('MainWindow')
             self.restoreGeometry(settings.value('geometry'))

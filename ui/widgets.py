@@ -63,6 +63,8 @@ class MEANavigationWidget(QtGui.QWidget):
 
         # Draw current position.
         x, y = self.current_pos
+        x += 100
+        y += 100
         offset = 5
         length = 25
         p.setPen(QtGui.QColor(0, 172, 11))
@@ -81,4 +83,5 @@ class MEANavigationWidget(QtGui.QWidget):
             y = 5.5 - ((self.height() / 2 - event.y()) / spacing)
             self.current_pos = (100*x, 100*y)
             self.clicked.emit(self.current_pos)
+            self.update()
             event.accept()

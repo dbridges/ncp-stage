@@ -117,6 +117,7 @@ class XYStage:
         if center:
             self.x_motor.pos = self.parent.saved_zero_pos[0]
             self.y_motor.pos = self.parent.saved_zero_pos[1]
+        self.zero()
 
     def on_xMotor_event(self, event):
         event_type, data = event
