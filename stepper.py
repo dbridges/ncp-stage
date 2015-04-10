@@ -41,7 +41,7 @@ class XYStage:
         Serial number identifier to use to find correct y motor com port.
     """
 
-    def __init__(self, parent, x_motor_sn, y_motor_sn):
+    def __init__(self, parent, x_motor_sn, y_motor_sn, backlash_comp=(0, 0)):
         self.parent = parent
         print(x_motor_sn)
         print(y_motor_sn)
@@ -51,6 +51,9 @@ class XYStage:
         self._zy = 0
         self._velocity = 0
         self._old_y = 0
+        self.backlash_comp = backlash_comp
+        self._x_update = False
+        self._y_update = False
 
         for p in list_ports.comports():
             if x_motor_sn in p[2]:
@@ -84,7 +87,8 @@ class XYStage:
         val : float
             position in mm
         """
-        self.x_motor.pos = limit(val + self._zx, 0, 10)
+        self._x_update = True
+        self.x_motor.pos = limit(val + self._zx - 0.2, 0, 10)
 
     @property
     def y(self):
@@ -98,7 +102,8 @@ class XYStage:
         val : float
             position in mm
         """
-        self.y_motor.pos = limit(val + self._zy, 0, 10)
+        self._y_update = True
+        self.y_motor.pos = limit(val + self._zy - 0.2, 0, 10)
 
     @property
     def velocity(self):
@@ -122,12 +127,20 @@ class XYStage:
         event_type, data = event
         if event_type == 'homed':
             self.zero()
+        elif event_type == 'move_completed':
+            if self._x_update:
+                self._x_update = False
+                self.x_motor.pos += 0.2
         self.parent.on_xPos_changed(self.x)
 
     def on_yMotor_event(self, event):
         event_type, data = event
         if event_type == 'homed':
             self.zero()
+        elif event_type == 'move_completed':
+            if self._y_update:
+                self._y_update = False
+                self.y_motor.pos += 0.2
         self.parent.on_yPos_changed(self.y)
 
     def start_move(self, axis, direction):
